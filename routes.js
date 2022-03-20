@@ -21,21 +21,21 @@ const routes = [
 
   {
     method: 'GET',
-    path: `/books/{id?}`,
+    path: `/books/{id}`,
     handler: getBookByID,
   },
 
   {
     method: 'PUT',
-    path: `/books/{id?}`,
+    path: `/books/{id}`,
     handler: editBookHandler,
   },
 
   {
     method: 'DELETE',
-    path: `/books/{id?}`,
+    path: `/books/{id}`,
     handler: deleteBookHandler,
   },
 ];
 
-module.exports = {routes};
+module.exports = routes;
