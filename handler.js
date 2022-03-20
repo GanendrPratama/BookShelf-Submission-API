@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 const {response} = require('@hapi/hapi');
 const {nanoid} = require('nanoid');
-const bookshelf = require('./bookshelf');
+const books = require('./bookshelf');
 
 // Function for adding books
 const addBookHandler = (request, h) => {
@@ -81,10 +81,10 @@ const getAllBookHandler = (h) => {
     const response = h.response({
         status: 'success',
         data: {
-            books: books.map((book) => ({
-                id: book.id,
-                name: book.name,
-                publisher: book.publisher,
+            Books: books.map((data) => ({
+                id: data.id,
+                name: data.name,
+                publisher: data.publisher,
             })),
         },
     });
