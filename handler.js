@@ -5,10 +5,8 @@ const books = require('./bookshelf');
 
 // Function for adding books
 const addBookHandler = (request, h) => {
-  try {
-    const {
-    name, year, author, summary, publisher, pageCount, readPage, reading,
-  }= request.payload;
+    // eslint-disable-next-line max-len
+    const {name, year, author, summary, publisher, pageCount, readPage, reading}= request.payload;
 
   const id = nanoid(16);
 
@@ -21,28 +19,6 @@ const addBookHandler = (request, h) => {
     finished = true;
   }
 
-  const newBook = {
-    id, name, year, author, summary, publisher,
-    pageCount, readPage, finished, finished, reading, insertedAt, updatedAt,
-  };
-
-
-  bookshelf.push(newBook);
-
-  const isSuccess = bookshelf.filter((books) => books.id === id).length > 0;
-
-  // success check
-  if (isSuccess) {
-    const response = h.response({
-      status: 'success',
-      message: 'Buku berhasil ditambahkan',
-      data: {
-        bookID: id,
-      },
-    });
-    response.code(201);
-    return response;
-  }
 
   // err 400 undefined name check
   if (name === undefined) {
@@ -57,27 +33,47 @@ const addBookHandler = (request, h) => {
   // err 400 readPage more than pageCount check
   if (readPage > pageCount) {
     const response = h.response({
-        status: 'fail',
-        // eslint-disable-next-line max-len
-        message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
+      status: 'fail',
+      // eslint-disable-next-line max-len
+      message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
     });
     response.code(400);
     return response;
   };
 
-  // err 500 common error while registering check
-} catch (error) {
+  const isSuccess = books.filter((book) => book.id === id).length > 0;
+
+  const newBook = {
+    id, name, year, author, summary, publisher,
+    pageCount, readPage, finished, reading, insertedAt, updatedAt,
+  };
+
+  books.push(newBook);
+
+  // success check
+  if (isSuccess) {
     const response = h.response({
-        status: 'error',
-        message: 'Buku gagal ditambahkan',
+      status: 'success',
+      message: 'Buku berhasil ditambahkan',
+      data: {
+        bookId: id,
+      },
     });
-    response.code(500);
+    response.code(201);
     return response;
-}
+  } else {
+    // err 500 general error
+    const response = h.response({
+      status: 'fail',
+      message: 'Buku gagal ditambahkan',
+  });
+  response.code(500);
+  return response;
+  }
 };
 
 // Function for getting every book's data
-const getAllBookHandler = (h) => {
+const getAllBookHandler = (request, h) => {
     const response = h.response({
         status: 'success',
         data: {
